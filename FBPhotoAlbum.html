@@ -100,14 +100,14 @@
   </div>
 
 <!-- Lightbox Modal -->
-<div id="lightbox" onclick="closeLightbox()">
-  <span class="close" onclick="closeLightbox()">&times;</span>
-  <img id="lightbox-img" src="">
-</div>
+<div id="lightbox">
+    <span class="close" onclick="closeLightbox()">&times;</span>
+    <img id="lightbox-img" src="">
+  </div>
 
   <script>
-    const pageId = '[FB_PAGE_ID]'; // Replace with your Facebook Page ID
-    let accessToken = '[ACCESS_TOKEN]'; // Replace with a valid page access token initially
+    const pageId = 'FB_PAGE_ID'; // Replace with your Facebook Page ID
+    let accessToken = 'ACCESS_TOKEN'; // Replace with a valid page access token initially
     const photosPerPage = 24; // Replace with desired number of photos per page
     let currentPage = 1;
     let photos = []; // Store all fetched photos here
