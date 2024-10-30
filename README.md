@@ -14,5 +14,5 @@ Created for users of a website that don't have Facebook, but want to see daily p
 Paste the updated code into a code block on your website (this was designed to be used with Squarespace)
 
 ## To Do
-- [] Add controls for navigating between photos within the lightbox modal
-- [] Clean up code and divide into individual HTML, CSS, and JS files
+- [ ] Add controls for navigating between photos within the lightbox modal
+- [ ] Clean up code and divide into individual HTML, CSS, and JS files
