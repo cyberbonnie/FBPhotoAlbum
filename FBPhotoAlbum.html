@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facebook Photo Gallery</title>
+  <style>
+    /* Styling for the gallery */
+    
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center; /* Center the items within the gallery */
+      margin-top: 20px;
+      max-width: 100%; /* Ensures gallery doesn’t overflow */
+    }
+    #gallery img {
+      width: 200px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px #3E2A1C;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    #gallery img:hover {
+        transform: scale(1.05);
+    }
+
+    /*Lightbox styling */
+    #lightbox {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(14, 14, 14, 0.8);
+        justify-content: center;
+        align-items: center;
+    }
+
+    #lightbox img {
+        max-width: 90%;
+        max-height: 80%;
+    }
+    #lightbox .close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        font-size: 30px;
+        color: white;
+        cursor: pointer;
+    }
+
+    /*Pagination styling*/
+    #pagination-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      gap: 5px;
+    }
+    .pagination-button {
+      padding: 10px 20px;
+      background-color: #A5D76E;
+      color: #3E2A1C;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .pagination-button:hover {
+        background-color: #466D31;
+    }
+    .pagination-button.active {
+        background-color: #3E2A1C;
+        color: #A5D76E;
+        text-decoration: underline;
+    }
+    .pagination-button:disabled {
+      background-color: #CCC;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="gallery"></div>
+  <div id="pagination-controls">
+    <button id="prevButton" class="pagination-button" onclick="prevPage()">Previous</button>
+    <div id="pageNumbers"></div>
+    <button id="nextButton" class="pagination-button" onclick="nextPage()">Next</button>
+  </div>
+
+<!-- Lightbox Modal -->
+<div id="lightbox" onclick="closeLightbox()">
+  <span class="close" onclick="closeLightbox()">&times;</span>
+  <img id="lightbox-img" src="">
+</div>
+
+  <script>
+    const pageId = '[FB_PAGE_ID]'; // Replace with your Facebook Page ID
+    let accessToken = '[ACCESS_TOKEN]'; // Replace with a valid page access token initially
+    const photosPerPage = 24; // Replace with desired number of photos per page
+    let currentPage = 1;
+    let photos = []; // Store all fetched photos here
+
+    async function fetchFacebookPhotos() {
+      try {
+        // Fetch all images attached to each posts with a limit on number of photos. Replace {subattachments.limit(XX)} with number of photos to fetch.
+        const response = await fetch(`https://graph.facebook.com/v21.0/${pageId}/posts?fields=id,message,created_time,attachments{subattachments.limit(96)}&access_token=${accessToken}`);
+        const data = await response.json();
+
+       photos = []; // Clear previous photo data
+        let photoCount = 0;
+        for (let post of data.data) {
+          if (post.attachments) {
+            for (let attachment of post.attachments.data) {
+              if (attachment.type === 'photo' && photoCount < 96) { // Update with total number of photos to fetch
+                photos.push(attachment.media.image.src);
+                photoCount++;
+              }
+              if (attachment.subattachments) {
+                for (let subattachment of attachment.subattachments.data) {
+                  if (subattachment.type === 'photo' && photoCount < 96) { // Update with total number of photos to fetch
+                    photos.push(subattachment.media.image.src);
+                    photoCount++;
+                  }
+                }
+              }
+              if (photoCount >= 96) break; // Update with total number of photos to fetch
+            }
+          }
+          if (photoCount >= 96) break; // Update with total number of photos to fetch
+        }
+        displayGallery(); // Show the gallery for the current page
+        updatePaginationControls();
+      } catch (error) {
+        console.error('Error fetching photos:', error);
+      }
+    }
+
+    // Function to display the gallery for the current page
+    function displayGallery() {
+      const gallery = document.getElementById('gallery');
+      gallery.innerHTML = ''; // Clear existing images
+
+      const start = (currentPage - 1) * photosPerPage;
+      const end = start + photosPerPage;
+      const pagePhotos = photos.slice(start, end);
+
+      pagePhotos.forEach(photoUrl => {
+        const img = document.createElement('img');
+        img.src = photoUrl;
+        img.alt = "Facebook Photo";
+        img.onclick = () => openLightbox(photoUrl); // Open lightbox on click
+        gallery.appendChild(img);
+      });
+    }
+
+    // Pagination control display
+    function updatePaginationControls() {
+      const pageNumbers = document.getElementById('pageNumbers');
+      pageNumbers.innerHTML = ''; // Clear current page numbers
+
+      const totalPages = Math.ceil(photos.length / photosPerPage);
+
+      for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.className = 'pagination-button';
+        pageButton.textContent = i;
+
+    // Add the active class to highlight the current page
+    if (i === currentPage) {
+      pageButton.classList.add('active');
+    }
+
+        pageButton.onclick = () => goToPage(i);
+        pageNumbers.appendChild(pageButton);
+      }
+
+      // Update button states
+      document.getElementById('prevButton').disabled = currentPage === 1;
+      document.getElementById('nextButton').disabled = currentPage === totalPages;
+    }
+
+    // Lightbox functions
+    function openLightbox(src) {
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      lightboxImg.src = src;
+      lightbox.style.display = 'flex';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').style.display = 'none';
+    }
+
+    // Pagination functions
+    function nextPage() {
+      currentPage++;
+      displayGallery();
+      updatePaginationControls();
+    }
+
+    function prevPage() {
+      currentPage--;
+      displayGallery();
+      updatePaginationControls();
+    }
+
+    function goToPage(page) {
+      currentPage = page;
+      displayGallery();
+      updatePaginationControls();
+    }
+
+    // Initial fetch and display setup
+    fetchFacebookPhotos();
+    setInterval(fetchFacebookPhotos, 43200000); // Refresh data every 12 hours
+  </script>
+
+</body>
+</html>
