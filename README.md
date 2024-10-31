@@ -3,6 +3,10 @@ Display photos from Facebook posts on your website using the Facebook Graph API.
 This will display the photos in an image gallery and allow users to see the photos without needing to go to Facebook directly.
 Created for users of a website that don't have Facebook, but want to see daily photos posted by a business (e.g., a dog daycare).
 
+![Thumbnails View](img/FBPhotoAlbum1.png)
+
+![Lightbox View](img/FBPhotoAlbum2.png)
+
 ## Customize for Your Site - You Will Need:
 1. Facebook Page ID - [How to Find Facebook Page ID](https://www.facebook.com/help/1503421039731588/)
 2. Page Access Token - can obtain one through the [Facebook Graph API Explorer](https://developers.facebook.com/tools/explorer/)
