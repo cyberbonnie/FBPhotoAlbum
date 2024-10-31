@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facebook Photo Gallery</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+
+</head>
+<body>
+
+  <div id="gallery"></div>
+  <div id="pagination-controls">
+    <button id="prevButton" class="pagination-button" onclick="prevPage()">Previous</button>
+    <div id="pageNumbers"></div>
+    <button id="nextButton" class="pagination-button" onclick="nextPage()">Next</button>
+  </div>
+
+<!-- Lightbox Modal -->
+<div id="lightbox">
+  <button id="closeLightbox" class="lightbox-nav" onclick="closeLightbox()">&#10006</button>
+  <button id="prevPhoto" class="lightbox-nav" onclick="prevPhoto()">&#10094</button>
+  <img id="lightbox-img" src="">
+  <button id="nextPhoto" class="lightbox-nav" onclick="nextPhoto()">&#10095</button>
+</div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>

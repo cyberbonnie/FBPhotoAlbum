@@ -1,6 +1,6 @@
 # FBPhotoAlbum
 Display photos from Facebook posts on your website using the Facebook Graph API.\
-This will display the photos in an image gallery and allow users to see the photos without needing to go to Facebook directly.\
+This will display the photos in an image gallery and allow users to see the photos without needing to go to Facebook directly.
 Created for users of a website that don't have Facebook, but want to see daily photos posted by a business (e.g., a dog daycare).
 
 ## Customize for Your Site - You Will Need:
@@ -11,8 +11,9 @@ Created for users of a website that don't have Facebook, but want to see daily p
 5. Color codes for your website theme - update the CSS with your colors
 
 ## Add to Your Website
-Paste the updated code into a code block on your website (this was designed to be used with Squarespace)
+- Paste the updated code from FBPhotoAlbum.html into a code block on your website (this was designed to be used with Squarespace)\
+- If you want to use the individual files, use FBPhotoAlbumHTML.html with the styles.css and script.js files as needed.
 
 ## To Do
-- [ ] Add controls for navigating between photos within the lightbox modal
-- [ ] Clean up code and divide into individual HTML, CSS, and JS files
+- [X] Add controls for navigating between photos within the lightbox modal
+- [X] Clean up code and divide into individual HTML, CSS, and JS files

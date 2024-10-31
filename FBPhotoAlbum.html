@@ -46,17 +46,28 @@
         align-items: center;
     }
 
-    #lightbox img {
-        max-width: 90%;
-        max-height: 80%;
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 36px;
+      color: white;
+      background: rgba(14, 14, 14, 0.8);
+      cursor: pointer;
+      padding: 10px;
     }
-    #lightbox .close {
-        position: absolute;
-        top: 20px;
-        right: 30px;
-        font-size: 30px;
-        color: white;
-        cursor: pointer;
+
+    #prevPhoto {
+      left: 30px;
+    }
+
+    #nextPhoto {
+      right: 30px;
+    }
+
+    #closeLightbox {
+      top: 20%;
+      right: 20px;
     }
 
     /*Pagination styling*/
@@ -101,9 +112,11 @@
 
 <!-- Lightbox Modal -->
 <div id="lightbox">
-    <span class="close" onclick="closeLightbox()">&times;</span>
-    <img id="lightbox-img" src="">
-  </div>
+  <button id="closeLightbox" class="lightbox-nav" onclick="closeLightbox()">&#10006</button>
+  <button id="prevPhoto" class="lightbox-nav" onclick="prevPhoto()">&#10094</button>
+  <img id="lightbox-img" src="">
+  <button id="nextPhoto" class="lightbox-nav" onclick="nextPhoto()">&#10095</button>
+</div>
 
   <script>
     const pageId = 'FB_PAGE_ID'; // Replace with your Facebook Page ID
@@ -191,16 +204,31 @@
       document.getElementById('nextButton').disabled = currentPage === totalPages;
     }
 
+    let currentPhotoIndex = 0 //Track the current photo's index
+
     // Lightbox functions
     function openLightbox(src) {
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightbox-img');
+      currentPhotoIndex = photos.indexOf(src); // Find and store the current photo's index
       lightboxImg.src = src;
       lightbox.style.display = 'flex';
     }
 
     function closeLightbox() {
       document.getElementById('lightbox').style.display = 'none';
+    }
+
+    // Show the previous photo in the lightbox
+    function prevPhoto() {
+      currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length; // Wrap around to the last photo
+      document.getElementById('lightbox-img').src = photos[currentPhotoIndex];
+    }
+
+    // Show the next photo in the lightbox
+    function nextPhoto() {
+      currentPhotoIndex = (currentPhotoIndex + 1) % photos.length; // Wrap around to the first photo
+      document.getElementById('lightbox-img').src = photos[currentPhotoIndex];
     }
 
     // Pagination functions
